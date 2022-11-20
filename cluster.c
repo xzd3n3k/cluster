@@ -95,6 +95,7 @@ void init_cluster(struct cluster_t *c, int cap)
  */
 void clear_cluster(struct cluster_t *c)
 {
+    assert(c);
     free(c->obj);
     init_cluster(c, c->capacity);
 }
@@ -132,7 +133,14 @@ struct cluster_t *resize_cluster(struct cluster_t *c, int new_cap)
  */
 void append_cluster(struct cluster_t *c, struct obj_t obj)
 {
+    assert(c);
+
     if (c->size < c->capacity) {
+        *(c->obj + (c->size * sizeof(obj_t))) = obj;
+        c->size += 1;
+    }
+    else {
+        c = resize_cluster(c, (c->capacity)+1);
         *(c->obj + (c->size * sizeof(obj_t))) = obj;
         c->size += 1;
     }
