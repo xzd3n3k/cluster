@@ -161,7 +161,9 @@ void merge_clusters(struct cluster_t *c1, struct cluster_t *c2)
     assert(c1 != NULL);
     assert(c2 != NULL);
 
-    // TODO
+    for (int i = 0; i < c2->size; i++) {
+        append_cluster(c1, *(c2->obj + (sizeof(obj_t) * i)));
+    }
 }
 
 /**********************************************************************/
