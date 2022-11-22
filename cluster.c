@@ -136,12 +136,12 @@ void append_cluster(struct cluster_t *c, struct obj_t obj)
     assert(c);
 
     if (c->size < c->capacity) {
-        *(c->obj + (c->size * sizeof(obj_t))) = obj;
+        c->obj[c->size] = obj;
         c->size += 1;
     }
     else {
         c = resize_cluster(c, (c->capacity)+1);
-        *(c->obj + (c->size * sizeof(obj_t))) = obj;
+        c->obj[c->size] = obj;
         c->size += 1;
     }
 }
@@ -162,8 +162,10 @@ void merge_clusters(struct cluster_t *c1, struct cluster_t *c2)
     assert(c2 != NULL);
 
     for (int i = 0; i < c2->size; i++) {
-        append_cluster(c1, *(c2->obj + (sizeof(obj_t) * i)));
+        append_cluster(c1, c2->obj[i]);
     }
+    
+    sort_cluster(c1);
 }
 
 /**********************************************************************/
