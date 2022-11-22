@@ -181,7 +181,16 @@ int remove_cluster(struct cluster_t *carr, int narr, int idx)
     assert(idx < narr);
     assert(narr > 0);
 
-    // TODO
+    for (int i = idx; i < narr-1; i++) {
+        cluster_t tmp = carr[i];
+        carr[i] = carr[i+1];
+        carr[i+1] = tmp;
+    }
+
+    carr = realloc(carr, (sizeof(cluster_t)*(narr-1)));
+    
+    return narr-1;
+
 }
 
 /*
