@@ -97,7 +97,7 @@ void clear_cluster(struct cluster_t *c)
 {
     assert(c);
     free(c->obj);
-    init_cluster(c, c->capacity);
+    init_cluster(c, 0);
 }
 
 /// Chunk of cluster objects. Value recommended for reallocation.
