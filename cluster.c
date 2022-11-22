@@ -201,7 +201,15 @@ float obj_distance(struct obj_t *o1, struct obj_t *o2)
     assert(o1 != NULL);
     assert(o2 != NULL);
 
-    // TODO
+    float x = (o1->x - o2->x);
+    x *= x;
+
+    float y = (o1->y - o2->y);
+    y *= y;
+
+    float euclidean_distance = sqrtf(x + y);
+
+    return euclidean_distance;
 }
 
 /*
