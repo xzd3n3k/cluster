@@ -222,7 +222,23 @@ float cluster_distance(struct cluster_t *c1, struct cluster_t *c2)
     assert(c2 != NULL);
     assert(c2->size > 0);
 
-    // TODO
+    float euclidean_distance = obj_distance(&(c1->obj[0]), &(c2->obj[0]));
+    float euclidean_distance_tmp;
+    obj_t obj1_tmp;
+    obj_t obj2_tmp;
+
+    for (int j = 0; j < c1->size; j++) {
+
+        for (int k = 0; k < c2->size; k++) {
+            euclidean_distance_tmp = obj_distance(&(c1->obj[j]), &(c2->obj[k]));
+
+            if (euclidean_distance_tmp < euclidean_distance) {
+                euclidean_distance = euclidean_distance_tmp;
+            }
+        }
+    }
+
+    return euclidean_distance;
 }
 
 /*
