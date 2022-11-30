@@ -140,9 +140,9 @@ void append_cluster(struct cluster_t *c, struct obj_t obj)
         c->size += 1;
     }
     else {
-        c = resize_cluster(c, (c->capacity)+1);
+        c = resize_cluster(c, (c->capacity)+CLUSTER_CHUNK);
         c->obj[c->size] = obj;
-        c->size += 1;
+        c->size += CLUSTER_CHUNK;
     }
 }
 
@@ -224,8 +224,6 @@ float cluster_distance(struct cluster_t *c1, struct cluster_t *c2)
 
     float euclidean_distance = obj_distance(&(c1->obj[0]), &(c2->obj[0]));
     float euclidean_distance_tmp;
-    obj_t obj1_tmp;
-    obj_t obj2_tmp;
 
     for (int j = 0; j < c1->size; j++) {
 
@@ -311,7 +309,32 @@ int load_clusters(char *filename, struct cluster_t **arr)
 {
     assert(arr != NULL);
 
-    // TODO
+    const int line_len = 80;
+    FILE *f = fopen(filename, "r");
+    char line[line_len];
+
+    char trash1[6];
+    char trash2[2];
+    int count;
+
+    fscanf(f, "%5s %c %d", trash1, trash2, &count);
+
+    *arr = malloc(sizeof(cluster_t)*count);
+
+    for (int i = 0; i < count; i++) {
+        obj_t obj;
+        fscanf(f, "%d %f %f", &obj.id, &obj.x, &obj.y);
+
+        init_cluster(&(*arr[i]), CLUSTER_CHUNK);
+        append_cluster(&(*arr[i]), obj);
+
+        if (&(*arr[i]) == NULL) *arr = NULL;
+    }
+
+    fclose(f);
+
+    if (*arr != NULL) return count;
+    return 0;
 }
 
 /*
@@ -332,5 +355,5 @@ int main(int argc, char *argv[])
 {
     struct cluster_t *clusters;
 
-    // TODO
+    return 0;
 }
