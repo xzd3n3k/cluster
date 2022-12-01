@@ -309,9 +309,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
 {
     assert(arr != NULL);
 
-    const int line_len = 80;
     FILE *f = fopen(filename, "r");
-    char line[line_len];
 
     char trash1[6];
     char trash2[2];
@@ -319,16 +317,13 @@ int load_clusters(char *filename, struct cluster_t **arr)
 
     fscanf(f, "%5s %c %d", trash1, trash2, &count);
 
-    *arr = malloc(sizeof(cluster_t)*count);
-
     for (int i = 0; i < count; i++) {
         obj_t obj;
         fscanf(f, "%d %f %f", &obj.id, &obj.x, &obj.y);
+        init_cluster(*arr+i, CLUSTER_CHUNK);
+        append_cluster(*arr+i, obj);
 
-        init_cluster(&(*arr[i]), CLUSTER_CHUNK);
-        append_cluster(&(*arr[i]), obj);
-
-        if (&(*arr[i]) == NULL) *arr = NULL;
+        if (*arr+i == NULL) *arr = NULL;
     }
 
     fclose(f);
@@ -353,7 +348,23 @@ void print_clusters(struct cluster_t *carr, int narr)
 
 int main(int argc, char *argv[])
 {
-    struct cluster_t *clusters;
+    if(!((argc>1)&&(argc<4))) {
+        fprintf(stderr, "1 or 2 arguments expected, got %d", argc-1);
+        return 1;
+        }
 
+    char *final_count_char;
+    int final_count;
+    if (argc == 2) {final_count = 1;}
+    else {final_count_char = argv[2]; final_count = atoi(final_count_char);}
+
+    cluster_t *arr = malloc(sizeof(cluster_t)*CLUSTER_CHUNK);
+
+    int count = load_clusters(argv[1], &arr);
+
+
+    print_clusters(arr, count);
+    //struct cluster_t *clusters;
+    free(arr);
     return 0;
 }
