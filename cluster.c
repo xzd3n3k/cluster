@@ -358,13 +358,12 @@ int main(int argc, char *argv[])
     if (argc == 2) {final_count = 1;}
     else {final_count_char = argv[2]; final_count = atoi(final_count_char);}
 
-    cluster_t *arr = malloc(sizeof(cluster_t)*CLUSTER_CHUNK);
+    cluster_t *clusters = malloc(sizeof(cluster_t)*CLUSTER_CHUNK);
 
-    int count = load_clusters(argv[1], &arr);
+    int count = load_clusters(argv[1], &clusters);
 
 
-    print_clusters(arr, count);
-    //struct cluster_t *clusters;
-    free(arr);
+    print_clusters(clusters, count);
+    free(clusters);
     return 0;
 }
