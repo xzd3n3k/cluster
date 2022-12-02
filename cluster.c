@@ -317,6 +317,8 @@ int load_clusters(char *filename, struct cluster_t **arr)
 
     fscanf(f, "%5s %c %d", trash1, trash2, &count);
 
+    *arr = malloc(sizeof(cluster_t)*count);
+
     for (int i = 0; i < count; i++) {
         obj_t obj;
         fscanf(f, "%d %f %f", &obj.id, &obj.x, &obj.y);
@@ -342,7 +344,7 @@ void print_clusters(struct cluster_t *carr, int narr)
     for (int i = 0; i < narr; i++)
     {
         printf("cluster %d: ", i);
-        print_cluster(&carr[i]);
+        print_cluster(&(carr[i]));
     }
 }
 
@@ -358,12 +360,12 @@ int main(int argc, char *argv[])
     if (argc == 2) {final_count = 1;}
     else {final_count_char = argv[2]; final_count = atoi(final_count_char);}
 
-    cluster_t *clusters = malloc(sizeof(cluster_t)*CLUSTER_CHUNK);
+    cluster_t *clusters;
 
     int count = load_clusters(argv[1], &clusters);
 
-
     print_clusters(clusters, count);
+
     free(clusters);
     return 0;
 }
