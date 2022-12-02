@@ -254,7 +254,7 @@ void find_neighbours(struct cluster_t *carr, int narr, int *c1, int *c2)
     *c2 = 1;
 
     for (int j = 0; j < narr; j++) {
-        for (int k = j+1; k < narr-j; k++) {
+        for (int k = j+1; k < narr; k++) {
             if (cluster_distance(&(carr[j]), &(carr[k])) < distance) {
                 distance = cluster_distance(&(carr[j]), &(carr[k]));
                 *c1 = j;
