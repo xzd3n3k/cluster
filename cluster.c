@@ -348,6 +348,17 @@ void print_clusters(struct cluster_t *carr, int narr)
     }
 }
 
+int check_ids_duplicity(cluster_t *carr, int narr) {
+    for (int j = 0; j < narr; j++) {
+        for (int k = j+1; k < narr; k++) {
+            if (carr[j].obj[0].id == carr[k].obj[0].id) {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
     if(!((argc>1)&&(argc<4))) {
@@ -363,6 +374,12 @@ int main(int argc, char *argv[])
     cluster_t *clusters;
 
     int count = load_clusters(argv[1], &clusters);
+
+    if (check_ids_duplicity(clusters, count) == 1) {
+        fprintf(stderr, "duplicit IDs has been found");
+        return 1;
+    }
+
     int *index_one = malloc(sizeof(int));
     int *index_two = malloc(sizeof(int));
 
