@@ -142,7 +142,7 @@ void append_cluster(struct cluster_t *c, struct obj_t obj)
     else {
         c = resize_cluster(c, (c->capacity)+CLUSTER_CHUNK);
         c->obj[c->size] = obj;
-        c->size += CLUSTER_CHUNK;
+        c->size += 1;
     }
 }
 
@@ -254,7 +254,7 @@ void find_neighbours(struct cluster_t *carr, int narr, int *c1, int *c2)
     *c2 = 1;
 
     for (int j = 0; j < narr; j++) {
-        for (int k = j; k < narr; k++) {
+        for (int k = j+1; k < narr-j; k++) {
             if (cluster_distance(&(carr[j]), &(carr[k])) < distance) {
                 distance = cluster_distance(&(carr[j]), &(carr[k]));
                 *c1 = j;
@@ -363,9 +363,23 @@ int main(int argc, char *argv[])
     cluster_t *clusters;
 
     int count = load_clusters(argv[1], &clusters);
+    int *index_one = malloc(sizeof(int));
+    int *index_two = malloc(sizeof(int));
 
+    while (count != final_count)
+    {
+
+        find_neighbours(clusters, count, index_one, index_two);
+
+        merge_clusters(&(clusters[*index_one]), &(clusters[*index_two]));
+
+        count = remove_cluster(clusters, count, *index_two);
+
+    }
+    
     print_clusters(clusters, count);
-
+    free(index_one);
+    free(index_two);
     free(clusters);
     return 0;
 }
