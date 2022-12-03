@@ -317,12 +317,21 @@ int load_clusters(char *filename, struct cluster_t **arr)
 
     char trash1[6];
     char trash2[2];
-    float count;
+    float countt;
 
-    fscanf(f, "%5s %c %f", trash1, trash2, &count);
-    int countt = count;
+    if (fscanf(f, "%5s %c %f", trash1, trash2, &countt) != 3) {
+        fprintf(stderr, "first line in file is in incorrect format\n");
+        return -1;
+
+    }
+    int count = countt;
     if (count != countt) {
         fprintf(stderr, "Count is not int\n");
+        return -1;
+    }
+
+    if (count < 1) {
+        fprintf(stderr, "object count is 0 or lower");
         return -1;
     }
 
@@ -335,7 +344,10 @@ int load_clusters(char *filename, struct cluster_t **arr)
         float id;
         int idd;
 
-        fscanf(f, "%f %f %f", &id, &obj.x, &obj.y);
+        if (fscanf(f, "%f %f %f", &id, &obj.x, &obj.y) != 3) {
+            fprintf(stderr, "id or coordinates are not number\n");
+            return -1;
+        }
 
         idd = id;
         if (idd != id) {
@@ -344,7 +356,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
         }
 
         if ((obj.x > 1000) || (obj.y > 1000) || (obj.x < 0) || (obj.y < 0)) {
-            fprintf(stderr, "Coordinations out of range");
+            fprintf(stderr, "Coordinations out of range\n");
             return -1;
         }
 
@@ -359,7 +371,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
         obj.id = idd;
 
         if ((obj.id > INT_MAX) || (obj.id < INT_MIN)) {
-            fprintf(stderr, "ID out of INT MIN/MAX range");
+            fprintf(stderr, "ID out of INT MIN/MAX range\n");
             return -1;
         }
 
