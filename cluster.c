@@ -339,6 +339,11 @@ int load_clusters(char *filename, struct cluster_t **arr)
             return -1;
         }
 
+        if ((obj.x > 1000) || (obj.y > 1000) || (obj.x < 0) || (obj.y < 0)) {
+            fprintf(stderr, "Coordinations out of range");
+            return -1;
+        }
+        
         x = obj.x;
         y = obj.y;
 
@@ -348,6 +353,11 @@ int load_clusters(char *filename, struct cluster_t **arr)
         }
 
         obj.id = idd;
+
+        if ((obj.id > INT_MAX) || (obj.id < INT_MIN)) {
+            fprintf(stderr, "ID out of INT MIN/MAX range");
+            return -1;
+        }
 
         init_cluster(*arr+i, CLUSTER_CHUNK);
         append_cluster(*arr+i, obj);
