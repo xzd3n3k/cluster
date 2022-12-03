@@ -313,15 +313,42 @@ int load_clusters(char *filename, struct cluster_t **arr)
 
     char trash1[6];
     char trash2[2];
-    int count;
+    float count;
 
-    fscanf(f, "%5s %c %d", trash1, trash2, &count);
+    fscanf(f, "%5s %c %f", trash1, trash2, &count);
+    int countt = count;
+    if (count != countt) {
+        fprintf(stderr, "Count is not int\n");
+        return -1;
+    }
 
     *arr = malloc(sizeof(cluster_t)*count);
 
+    int x;
+    int y;
     for (int i = 0; i < count; i++) {
         obj_t obj;
-        fscanf(f, "%d %f %f", &obj.id, &obj.x, &obj.y);
+        float id;
+        int idd;
+
+        fscanf(f, "%f %f %f", &id, &obj.x, &obj.y);
+
+        idd = id;
+        if (idd != id) {
+            fprintf(stderr, "ID is not int\n");
+            return -1;
+        }
+
+        x = obj.x;
+        y = obj.y;
+
+        if ((x != obj.x) || (y != obj.y)) {
+            fprintf(stderr, "Floating point number has been found in coordinations\n");
+            return -1;
+        }
+
+        obj.id = idd;
+
         init_cluster(*arr+i, CLUSTER_CHUNK);
         append_cluster(*arr+i, obj);
 
@@ -362,21 +389,23 @@ int check_ids_duplicity(cluster_t *carr, int narr) {
 int main(int argc, char *argv[])
 {
     if(!((argc>1)&&(argc<4))) {
-        fprintf(stderr, "1 or 2 arguments expected, got %d", argc-1);
+        fprintf(stderr, "1 or 2 arguments expected, got %d\n", argc-1);
         return 1;
         }
 
     char *final_count_char;
     int final_count;
+
     if (argc == 2) {final_count = 1;}
     else {final_count_char = argv[2]; final_count = atoi(final_count_char);}
 
     cluster_t *clusters;
 
     int count = load_clusters(argv[1], &clusters);
+    if (count == -1) return 1;
 
     if (check_ids_duplicity(clusters, count) == 1) {
-        fprintf(stderr, "duplicit IDs has been found");
+        fprintf(stderr, "duplicit IDs has been found\n");
         return 1;
     }
 
