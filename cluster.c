@@ -310,6 +310,10 @@ int load_clusters(char *filename, struct cluster_t **arr)
     assert(arr != NULL);
 
     FILE *f = fopen(filename, "r");
+    if (f == NULL) {
+        fprintf(stderr, "Was not able to open file");
+        return -1;
+    }
 
     char trash1[6];
     char trash2[2];
@@ -343,7 +347,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
             fprintf(stderr, "Coordinations out of range");
             return -1;
         }
-        
+
         x = obj.x;
         y = obj.y;
 
