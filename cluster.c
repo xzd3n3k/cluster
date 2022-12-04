@@ -429,12 +429,12 @@ int main(int argc, char *argv[])
         final_count_float = atof(final_count_char);
         final_count = atoi(final_count_char);
         if (final_count_float != final_count) {
-            fprintf(stderr, "parameter n is not int");
+            fprintf(stderr, "parameter n is not int\n");
             return 1;
         }
         }
     if (final_count < 1) {
-        fprintf(stderr, "parameter is not number or is lower than 1");
+        fprintf(stderr, "parameter is not number or is lower than 1\n");
     }
 
     cluster_t *clusters;
