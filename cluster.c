@@ -1,4 +1,9 @@
 /**
+ * @name Projekt 2 - Jednoducha shlukova analyza: 2D nejblizsi soused
+ * @author Zdeněk Němec <xnemec0d@stud.fit.vutbr.cz>
+ */
+
+/**
  * Kostra programu pro 2. projekt IZP 2022/23
  *
  * Jednoducha shlukova analyza: 2D nejblizsi soused.
