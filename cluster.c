@@ -331,7 +331,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
     }
 
     if (count < 1) {
-        fprintf(stderr, "object count is 0 or lower");
+        fprintf(stderr, "there are no objects or object count is negative\n");
         return -1;
     }
 
@@ -415,15 +415,27 @@ int check_ids_duplicity(cluster_t *carr, int narr) {
 int main(int argc, char *argv[])
 {
     if(!((argc>1)&&(argc<4))) {
-        fprintf(stderr, "1 or 2 arguments expected, got %d\n", argc-1);
+        fprintf(stderr, "1 or 2 parameters expected, got %d\n", argc-1);
         return 1;
         }
 
     char *final_count_char;
+    float final_count_float;
     int final_count;
 
     if (argc == 2) {final_count = 1;}
-    else {final_count_char = argv[2]; final_count = atoi(final_count_char);}
+    else {
+        final_count_char = argv[2];
+        final_count_float = atof(final_count_char);
+        final_count = atoi(final_count_char);
+        if (final_count_float != final_count) {
+            fprintf(stderr, "parameter n is not int");
+            return 1;
+        }
+        }
+    if (final_count < 1) {
+        fprintf(stderr, "parameter is not number or is lower than 1");
+    }
 
     cluster_t *clusters;
 
