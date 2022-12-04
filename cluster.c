@@ -350,7 +350,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
         int idd;
 
         if (fscanf(f, "%f %f %f", &id, &obj.x, &obj.y) != 3) {
-            fprintf(stderr, "id or coordinates are not number\n");
+            fprintf(stderr, "id or coordinates are not number or missing\n");
             return -1;
         }
 
@@ -374,11 +374,6 @@ int load_clusters(char *filename, struct cluster_t **arr)
         }
 
         obj.id = idd;
-
-        if ((obj.id > INT_MAX) || (obj.id < INT_MIN)) {
-            fprintf(stderr, "ID out of INT MIN/MAX range\n");
-            return -1;
-        }
 
         init_cluster(*arr+i, CLUSTER_CHUNK);
         append_cluster(*arr+i, obj);
@@ -417,6 +412,36 @@ int check_ids_duplicity(cluster_t *carr, int narr) {
     return 0;
 }
 
+int validate_ids(char *filename, int count) {
+   
+    FILE *f = fopen(filename, "r");
+
+    if (f == NULL) {
+        fprintf(stderr, "Was not able to open file");
+        return -1;
+    }
+
+    char trash1[6];
+    char trash2[2];
+    float countt;
+
+    fscanf(f, "%5s %c %f", trash1, trash2, &countt);
+
+    for (int i = 0; i < count; i++) {
+        long id;
+        int x;
+        int y;
+
+        fscanf(f, "%ld %d %d", &id, &x, &y);
+        if ((id > INT_MAX) || (id < INT_MIN)) {
+            return 1;
+        }
+    }
+
+    fclose(f);
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
     if(!((argc>1)&&(argc<4))) {
@@ -446,6 +471,11 @@ int main(int argc, char *argv[])
 
     int count = load_clusters(argv[1], &clusters);
     if (count == -1) return 1;
+
+    if(validate_ids(argv[1], count) == 1) {
+        fprintf(stderr, "ID out of INT MIN/MAX range\n");
+        return 1;
+    }
 
     if (check_ids_duplicity(clusters, count) == 1) {
         fprintf(stderr, "duplicit IDs has been found\n");
