@@ -465,6 +465,7 @@ int main(int argc, char *argv[])
         }
     if (final_count < 1) {
         fprintf(stderr, "parameter is not number or is lower than 1\n");
+        return 1;
     }
 
     cluster_t *clusters;
